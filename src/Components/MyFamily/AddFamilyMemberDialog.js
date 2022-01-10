@@ -92,7 +92,10 @@ class AddFamilyMemberDialog extends React.Component {
             }
 
             axios.post('http://localhost:9443/parent/', newParent)
-                .then(res => {this.handleClose()})
+                .then(res => {
+                    this.props.onValidate();
+                    this.props.onClose();
+                })
                 .catch(err => alert(err));
         } else if (this.state.familyMemberType == "child") {
             var newChild = {
@@ -103,17 +106,19 @@ class AddFamilyMemberDialog extends React.Component {
                 birthDate: this.state.child.birthDate
             }
 
-            //@ToDo : axios call
             axios.post('http://localhost:9443/child/', newChild)
-                .then(res => {this.handleClose();})
+                .then(res => {
+                    this.props.onValidate(true);
+                    this.props.onClose();
+                })
                 .catch(err => alert(err));
         }
     };
 
     render() {
 
-        const mockParent1 = {id:675, firstName:"toto", lastName:"tata"}
-        const mockParent2 = {id:676, firstName:"toto", lastName:"tata"}
+        const mockParent1 = {id:680, firstName:"toto", lastName:"tata"}
+        const mockParent2 = {id:681, firstName:"toto", lastName:"tata"}
 
 
         var content;

@@ -1,3 +1,4 @@
+import { ExitToApp } from '@mui/icons-material';
 import { CircularProgress } from '@mui/material';
 import { Box } from '@mui/system';
 import axios from 'axios';
@@ -16,6 +17,10 @@ class MyFamily extends React.Component {
             },
             isGetFamilyMemberNeeded: true
         }
+    }
+
+    handleFamilyRefresh = (isRefreshNeeded) => {
+        this.setState({isGetFamilyMemberNeeded:isRefreshNeeded});
     }
 
     getChildrenFromParent = (parentId) => {
@@ -43,52 +48,67 @@ class MyFamily extends React.Component {
 
         var parents = [];
         var children = [];
+        var familyMembers = [];
         /**
          * Step 1 : Get parents
          */
         axios.get('http://localhost:9443/parent/userid/'+userId)
         .then(resParents => {
-            var parents = resParents.data;
+            var parentsData = resParents.data;
             //Add new ones
-            parents.forEach(parent => {
+            parentsData.forEach(parentData => {
                 const parentMember = {
                     type: "parent",
-                    member: parent
+                    member: parentData
                 };
                 parents.push(parentMember);
-
-                /**
-                 * Step 2 : Get children (for this parent)
-                 */
-                var parentChildren = this.getChildrenFromParent(parent.id);
-                parentChildren.forEach(child => {
-                    const childMember = {
-                        type: "child",
-                        member: child
-                    };
-                    if(!children.includes(childMember))
-                    {
-                        children = [...children, childMember];
-                    }
-                });
             });
+
+            /**
+             * Step 2: Get children
+             */
+            const firstIdParent = parents[0] ? parents[0].member.id : null;
+            const secondIdParent = parents[1] ? parents[1].member.id : null;
+            axios.get('http://localhost:9443/child/parentsid/'+firstIdParent+'/'+secondIdParent)
+                .then(resChildren => {
+                    var childrenData = resChildren.data;
+                    childrenData.forEach(childData => {
+                        const childMember = {
+                            type:"child",
+                            member: childData
+                        };
+                        children.push(childMember);
+                    })
+
+                    familyMembers = parents.concat(children);
+                    this.setState({family: {members:familyMembers}, isGetFamilyMemberNeeded: false});
+                })
+                .catch(err => this.setState({family: {members:parents}, isGetFamilyMemberNeeded: false}));
         });
 
-        console.log(parents);
-        console.log(children);
-        this.setState({family: {members:parents.concat(children)}, isGetFamilyMemberNeeded: false});
+        //We need to set it here because we don't have any guaranty that the request will be finish before next rendering
+        // => multiple rendering could occur in the meantime and cause error
+        this.setState({isGetFamilyMemberNeeded:false});
     }
 
-    render () {
+    componentDidUpdate() {
         //Get all family members linked to the user
         if (this.props.userId && this.props.userId>0 && this.state.isGetFamilyMemberNeeded) {
             this.getFamilyMembers(this.props.userId);
-        }
-        
+        }       
+    }
+
+    render () {
         return (
             <div>
-                <FamilyCard color={this.props.color} userId={this.props.userId} members={this.state.family.members}/>
-                <ParentCard color={this.props.color}/>
+                <FamilyCard 
+                    color={this.props.color} 
+                    userId={this.props.userId} 
+                    members={this.state.family.members} 
+                    onRefresh={this.handleFamilyRefresh}/>
+                <ParentCard 
+                    color={this.props.color} 
+                    onRefresh={this.handleFamilyRefresh}/>
             </div>
         );
     }

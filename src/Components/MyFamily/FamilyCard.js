@@ -49,6 +49,7 @@ class FamilyCard extends React.Component {
                                 <AddFamilyMemberDialog
                                     isOpen={this.state.addFamilyMemberDialogOpen}
                                     onClose={this.handleDialogClose}
+                                    onValidate={this.props.onRefresh}
                                     dialogColor={this.props.color}
                                     userId={this.props.userId}/>
                                 {membersDisplay}

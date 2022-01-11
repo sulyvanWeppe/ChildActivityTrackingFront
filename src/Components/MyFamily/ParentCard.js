@@ -1,7 +1,6 @@
-import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, TextField, Avatar, IconButton, Divider, Typography, Grid, ButtonGroup } from '@mui/material';
-import { Box } from '@mui/system';
+import { Button, Card, CardActionArea, CardContent, CardMedia, Avatar, Divider, Typography, Grid } from '@mui/material';
 import React from 'react'
-import { AddCircle, Edit } from '@mui/icons-material'
+import { Edit } from '@mui/icons-material'
 import ParentInfoEdit from './ParentInfoEdit';
 import AddFamilyMemberDialog from './AddFamilyMemberDialog';
 

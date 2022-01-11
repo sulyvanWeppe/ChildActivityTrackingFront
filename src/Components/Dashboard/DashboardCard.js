@@ -1,14 +1,10 @@
 import React from 'react';
 import {Card, CardActionArea, CardContent, CardMedia, CardActions, Typography, IconButton} from '@mui/material';
 import { AddCircle } from '@mui/icons-material'
-import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 
 import AddActivityDialog from './AddActivityDialog';
-import Image from '../../cardBackground.jpg';
 
-const style = {
-    backgroundImage: `url(${Image})`
-}
 
 class DashboardCard extends React.Component {
 

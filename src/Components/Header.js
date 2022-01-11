@@ -1,11 +1,8 @@
-import { Avatar, Grid, Box, Typography, Card, CardActionArea, CardContent, SpeedDialIcon, SpeedDialAction, SpeedDial, Breadcrumbs } from '@mui/material';
-import { deepOrange } from '@mui/material/colors';
+import { Avatar, Grid, Box, Typography, Card, CardContent, SpeedDialAction, SpeedDial, Breadcrumbs } from '@mui/material';
 import React from 'react';
 import Image from './header3.png';
 
-import { Home, Save } from '@mui/icons-material';
-
-const appColor = "#cb51db";
+import { Home } from '@mui/icons-material';
 
 const style = {
     backgroundImage: `url(${Image})`

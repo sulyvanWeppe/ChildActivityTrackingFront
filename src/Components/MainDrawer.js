@@ -2,8 +2,7 @@ import React from "react";
 import { Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar } from "@mui/material";
 import { Dashboard, CalendarToday, Description, Person, FamilyRestroom } from "@mui/icons-material";
 //import { makeStyles } from "@mui/material";
-import { makeStyles, withStyles } from "@mui/styles";
-import PropTypes from 'prop-types';
+import { withStyles } from "@mui/styles";
 
 const useStyles = theme => ({
     root: {

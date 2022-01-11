@@ -1,4 +1,4 @@
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import axios from 'axios';
 import React from 'react';
 import ChildInfoEdit from './ChildInfoEdit';
@@ -25,6 +25,10 @@ class AddFamilyMemberDialog extends React.Component {
             }
         };
     }
+    componentDidUpdate(){
+        //var parents = this.props.familyMembers.filter((member) => member.type === "parent");
+        
+    }
 
     handleClose = () => {
         this.props.onClose();
@@ -35,25 +39,25 @@ class AddFamilyMemberDialog extends React.Component {
     }
 
     handleParentFieldChange = (e) => {
-        if (e.target.id == "firstNameField") {
+        if (e.target.id === "firstNameField") {
             this.setState((state) => { return {parent:{firstName:e.target.value, lastName:state.parent.lastName, email:state.parent.email}}});
         }
-        else if (e.target.id == "lastNameField") {
+        else if (e.target.id === "lastNameField") {
             this.setState((state) => { return {parent:{firstName:state.parent.firstName, lastName:e.target.value, email:state.parent.email}}});
         }
-        else if (e.target.id == "emailField") {
+        else if (e.target.id === "emailField") {
             this.setState((state) => { return {parent:{firstName:state.parent.firstName, lastName:state.parent.lastName, email:e.target.value}}});
         }
     }
 
     handleChildFieldChange = (e) => {
-        if (e.target.id == "firstNameField") {
+        if (e.target.id === "firstNameField") {
             this.setState((state) => {
                 const currentChild = state.child;
                 return {child:{firstName:e.target.value,lastName:currentChild.lastName,parent1:currentChild.parent1,parent2:currentChild.parent2,birhtDate:currentChild.birhtDate}};
             });
         }
-        else if (e.target.id == "lastNameField") {
+        else if (e.target.id === "lastNameField") {
             this.setState((state) => {
                 const currentChild = state.child;
                 return {child:{firstName:currentChild.firstName,lastName:e.target.value,parent1:currentChild.parent1,parent2:currentChild.parent2,birhtDate:currentChild.birhtDate}};
@@ -62,19 +66,19 @@ class AddFamilyMemberDialog extends React.Component {
     }
 
     handleChildComposedFieldChange = (e,fieldId) => {
-        if (fieldId == "selectParent1Field") {
+        if (fieldId === "selectParent1Field") {
             this.setState((state) => {
                 const currentChild = state.child;
                 return {child:{firstName:currentChild.firstName,lastName:currentChild.lastName,parent1:e.target.value,parent2:currentChild.parent2,birhtDate:currentChild.birhtDate}};
             });
         }
-        else if (fieldId== "selectParent2Field") {
+        else if (fieldId === "selectParent2Field") {
             this.setState((state) => {
                 const currentChild = state.child;
                 return {child:{firstName:currentChild.firstName,lastName:currentChild.lastName,parent1:currentChild.parent1,parent2:e.target.value,birhtDate:currentChild.birhtDate}};
             });
         }
-        else if (fieldId == "birthDateField") {
+        else if (fieldId === "birthDateField") {
             this.setState((state) => {
                 const currentChild = state.child;
                 return {child:{firstName:currentChild.firstName,lastName:currentChild.lastName,parent1:currentChild.parent1,parent2:currentChild.parent2,birthDate:e}};
@@ -83,7 +87,7 @@ class AddFamilyMemberDialog extends React.Component {
     }
 
     handleValidate = () => {
-        if (this.state.familyMemberType == "parent") {
+        if (this.state.familyMemberType === "parent") {
             var newParent = {
                 userId: this.props.userId,
                 firstName: this.state.parent.firstName,
@@ -97,7 +101,7 @@ class AddFamilyMemberDialog extends React.Component {
                     this.props.onClose();
                 })
                 .catch(err => alert(err));
-        } else if (this.state.familyMemberType == "child") {
+        } else if (this.state.familyMemberType === "child") {
             var newChild = {
                 firstName: this.state.child.firstName,
                 lastName: this.state.child.lastName, 
@@ -116,22 +120,24 @@ class AddFamilyMemberDialog extends React.Component {
     };
 
     render() {
-
-        const mockParent1 = {id:680, firstName:"toto", lastName:"tata"}
-        const mockParent2 = {id:681, firstName:"toto", lastName:"tata"}
-
+        var familyParent1;
+        var familyParent2;
+        if (this.props.parents) {
+            familyParent1 = {id:this.props.parents[0].member.id, firstName:this.props.parents[0].member.firstName, lastName:this.props.parents[0].member.lastName}
+            familyParent2 = {id:this.props.parents[1].member.id, firstName:this.props.parents[1].member.firstName, lastName:this.props.parents[1].member.lastName}
+        }
 
         var content;
-        if (this.state.familyMemberType == "parent") {
+        if (this.state.familyMemberType === "parent") {
             content = <ParentInfoEdit editEnabled={true} onFieldUpdate={this.handleParentFieldChange}/>;
         }
-        else if(this.state.familyMemberType == "child") {
+        else if(this.state.familyMemberType === "child") {
             content = <ChildInfoEdit 
                         editEnabled={true} 
                         onFieldUpdate={this.handleChildFieldChange} 
                         onComposedFieldUpdate={this.handleChildComposedFieldChange} 
-                        parent1={mockParent1}
-                        parent2={mockParent2}
+                        parent1={familyParent1}
+                        parent2={familyParent2}
                         birthDate={this.state.child.birthDate}/>;
         }
 

@@ -1,19 +1,8 @@
 import React from 'react'
 import { Grid, Box } from '@mui/material';
 import DashboardCard from './DashboardCard';
-import axios from 'axios';
 
 class Dashboard extends React.Component {
-
-
-    /**
-     * The below componentDidMount is just an axios use example
-     */
-    /*
-    componentDidMount() {
-        axios.get('http://localhost:9443/user/574')
-        .then(res => alert(res.data.id+" "+res.data.emailAddress));
-    };*/
 
     render () {
         const activities = Array.from(this.props.data.keys());

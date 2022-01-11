@@ -10,7 +10,7 @@ class AddFamilyMemberDialog extends React.Component {
         super(props);
 
         this.state = {
-            familyMemberType: "parent",
+            familyMemberType: this.props.memberType ?? "parent",
             parent:{
                 firstName: null,
                 lastName: null,
@@ -24,10 +24,6 @@ class AddFamilyMemberDialog extends React.Component {
                 birthDate: null
             }
         };
-    }
-    componentDidUpdate(){
-        //var parents = this.props.familyMembers.filter((member) => member.type === "parent");
-        
     }
 
     handleClose = () => {
@@ -155,6 +151,7 @@ class AddFamilyMemberDialog extends React.Component {
                                 id="selectMemberType"    
                                 onChange={this.handleMemberTypeChange}
                                 defaultValue={this.state.familyMemberType}
+                                disabled={this.props.isTypeFrozen}
                             >
                                 <MenuItem value="parent">Parent</MenuItem>
                                 <MenuItem value="child">Child</MenuItem>

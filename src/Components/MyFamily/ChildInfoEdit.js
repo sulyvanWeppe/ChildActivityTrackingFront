@@ -61,7 +61,7 @@ class ChildInfoEdit extends React.Component {
                                 </Select>
                             </FormControl>                             
                         </Box>
-                        <Box sx={{display:'flex', marginTop:'6%'}}>
+                        <Box sx={{display:'flex', marginLeft:'2%', marginTop:'4%'}}>
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DatePicker
                                     id="birthDateField"

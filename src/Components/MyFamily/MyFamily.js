@@ -2,6 +2,7 @@ import axios from 'axios';
 import React from 'react'
 import FamilyCard from './FamilyCard';
 import ParentCard from './ParentCard';
+import ChildCard from './ChildCard';
 
 class MyFamily extends React.Component {
 
@@ -56,7 +57,8 @@ class MyFamily extends React.Component {
             parentsData.forEach(parentData => {
                 const parentMember = {
                     type: "parent",
-                    member: parentData
+                    member: parentData,
+                    isOnFocus: false
                 };
                 parents.push(parentMember);
             });
@@ -72,7 +74,8 @@ class MyFamily extends React.Component {
                     childrenData.forEach(childData => {
                         const childMember = {
                             type:"child",
-                            member: childData
+                            member: childData,
+                            isOnFocus: false
                         };
                         children.push(childMember);
                     })
@@ -95,17 +98,51 @@ class MyFamily extends React.Component {
         }       
     }
 
+    handleFocusChange = (memberType, memberId) => {
+        var familyMembers = this.state.family.members;
+        familyMembers.forEach(familyMember => {
+            if (familyMember.type.toString() === memberType && familyMember.member.id.toString() === memberId) {
+                familyMember.isOnFocus = true;
+            }
+            else {
+                familyMember.isOnFocus = false;
+            }
+        });
+
+        this.setState({family:{members:familyMembers}});
+    }
+
     render () {
+        var memberCard;
+        var focusedMember;
+        this.state.family.members.forEach(member => {
+            if (member.isOnFocus) {
+                focusedMember = member;
+            }
+        });
+
+        if (focusedMember) {
+            if (focusedMember.type === "parent") {
+                memberCard = <ParentCard 
+                    color={this.props.color} 
+                    onRefresh={this.handleFamilyRefresh}/>;
+            }
+            else if (focusedMember.type === "child") {
+                memberCard = <ChildCard 
+                color={this.props.color}
+                onRefresh={this.handleFamilyRefresh}/>
+            }
+        }
+
         return (
             <div>
                 <FamilyCard 
                     color={this.props.color} 
                     userId={this.props.userId} 
                     members={this.state.family.members} 
-                    onRefresh={this.handleFamilyRefresh}/>
-                <ParentCard 
-                    color={this.props.color} 
-                    onRefresh={this.handleFamilyRefresh}/>
+                    onRefresh={this.handleFamilyRefresh}
+                    onSetFocusOnMember={this.handleFocusChange}/>
+                {memberCard}
             </div>
         );
     }

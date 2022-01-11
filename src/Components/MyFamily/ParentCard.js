@@ -39,7 +39,8 @@ class ParentCard extends React.Component {
                                         isOpen={this.state.editParentDialogOpen}
                                         onClose={this.handleDialogClose}
                                         dialogColor={this.props.color}
-                                        memberType="parent"/>
+                                        memberType="parent"
+                                        isTypeFrozen={true}/>
                                 </Grid>
                             </Grid>
                         </CardMedia>

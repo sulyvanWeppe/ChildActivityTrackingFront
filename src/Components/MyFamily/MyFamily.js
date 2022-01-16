@@ -115,22 +115,24 @@ class MyFamily extends React.Component {
     render () {
         var memberCard;
         var focusedMember;
-        this.state.family.members.forEach(member => {
-            if (member.isOnFocus) {
-                focusedMember = member;
-            }
-        });
+        const focusedMembers = this.state.family.members.filter(member => {return member.isOnFocus});
+        focusedMember = focusedMembers[0];
 
         if (focusedMember) {
             if (focusedMember.type === "parent") {
                 memberCard = <ParentCard 
                     color={this.props.color} 
-                    onRefresh={this.handleFamilyRefresh}/>;
+                    onRefresh={this.handleFamilyRefresh}
+                    userId={this.props.userId}
+                    member={focusedMember}/>;
             }
             else if (focusedMember.type === "child") {
                 memberCard = <ChildCard 
                 color={this.props.color}
-                onRefresh={this.handleFamilyRefresh}/>
+                onRefresh={this.handleFamilyRefresh}
+                userId={this.props.userId}
+                member={focusedMember}
+                members={this.state.family.members}/>
             }
         }
 

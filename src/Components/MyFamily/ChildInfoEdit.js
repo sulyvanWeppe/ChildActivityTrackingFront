@@ -2,6 +2,7 @@ import { DatePicker, LocalizationProvider } from '@mui/lab';
 import { Box, FormControl, InputLabel, TextField, MenuItem, Select } from '@mui/material';
 import React from 'react';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import * as FamilyUtils from '../../Utils/familyUtils';
 
 class ChildInfoEdit extends React.Component {
 
@@ -18,13 +19,14 @@ class ChildInfoEdit extends React.Component {
     }
 
     render() {
+        var parents = this.props.members.filter(member => {return member.type === "parent"});
         var parent1Item=null;
         var parent2Item=null;
-        if (this.props.parent1) {
-            parent1Item= <MenuItem value={this.props.parent1.id}>{this.props.parent1.firstName+" "+this.props.parent1.lastName}</MenuItem>;
+        if (parents && parents[0]) {
+            parent1Item= <MenuItem value={parents[0].member.id}>{parents[0].member.firstName+" "+parents[0].member.lastName}</MenuItem>;
         }
-        if (this.props.parent2) {
-            parent2Item= <MenuItem value={this.props.parent2.id}>{this.props.parent2.firstName+" "+this.props.parent2.lastName}</MenuItem>;
+        if (parents && parents[1]) {
+            parent2Item= <MenuItem value={parents[1].member.id}>{parents[1].member.firstName+" "+parents[1].member.lastName}</MenuItem>;
         }
 
         return (
@@ -32,8 +34,24 @@ class ChildInfoEdit extends React.Component {
                 <Box component="form" autoComplete="off" noValidate>
                     <Box sx={{display:'flex', flexDirection:'column'}}>
                         <Box sx={{display:'flex', flexDirection:'row'}}>
-                            <TextField id="firstNameField" onChange={this.props.onFieldUpdate} disabled={!this.props.editEnabled} label="First name" variant="standard" sx={{width:'30%', marginLeft:'2%'}}/>
-                            <TextField id="lastNameField" onChange={this.props.onFieldUpdate} disabled={!this.props.editEnabled} label="Last name" variant="standard" sx={{width:'30%', margin:'auto'}}/>
+                            <TextField 
+                                id="firstNameField" 
+                                onChange={this.props.onFieldUpdate} 
+                                disabled={!this.props.editEnabled} 
+                                label="First name" 
+                                value={(this.props.memberToUpdate && !this.props.editEnabled) ? this.props.memberToUpdate.member.firstName : null} 
+                                placeholder={(this.props.memberToUpdate && this.props.editEnabled) ? this.props.memberToUpdate.member.firstName : null}
+                                variant="standard" 
+                                sx={{width:'30%', marginLeft:'2%'}}/>
+                            <TextField 
+                                id="lastNameField" 
+                                onChange={this.props.onFieldUpdate} 
+                                disabled={!this.props.editEnabled} 
+                                label="Last name" 
+                                value={(this.props.memberToUpdate && !this.props.editEnabled) ? this.props.memberToUpdate.member.lastName : null}
+                                placeholder={(this.props.memberToUpdate && this.props.editEnabled) ? this.props.memberToUpdate.member.lastName : null}
+                                variant="standard" 
+                                sx={{width:'30%', margin:'auto'}}/>
                         </Box>
                         <Box sx={{display:'flex', flexDirection:'row'}}>
                             <FormControl variant="standard" sx={{width:'40%', marginLeft:'2%'}}>
@@ -43,7 +61,12 @@ class ChildInfoEdit extends React.Component {
                                     id="selectParent1Field"
                                     onChange={this.handleParent1Change}
                                     disabled={!this.props.editEnabled}
-                                >
+                                    value={(this.props.memberToUpdate && !this.props.editEnabled) ? this.props.memberToUpdate.member.parent1Id : this.props.currentChildValue.parent1}
+                                    renderValue={(selected) => {
+                                        const selectedParent = FamilyUtils.getMemberFromFamilyByIdAndType(selected, "parent", this.props.members);
+                                        return selectedParent.member.firstName+' '+selectedParent.member.lastName;
+                                    }}
+                                    >
                                     {parent1Item}
                                     {parent2Item}
                                 </Select>
@@ -55,6 +78,11 @@ class ChildInfoEdit extends React.Component {
                                     id="selectParent2Field"
                                     onChange={this.handleParent2Change}
                                     disabled={!this.props.editEnabled}
+                                    value={(this.props.memberToUpdate && !this.props.editEnabled) ? this.props.memberToUpdate.member.parent2Id : this.props.currentChildValue.parent2}
+                                    renderValue={(selected) => {
+                                        const selectedParent = FamilyUtils.getMemberFromFamilyByIdAndType(selected, "parent", this.props.members);
+                                        return selectedParent.member.firstName+' '+selectedParent.member.lastName;
+                                    }}
                                 >
                                     {parent1Item}
                                     {parent2Item}
@@ -67,7 +95,7 @@ class ChildInfoEdit extends React.Component {
                                     id="birthDateField"
                                     label="Birth date"
                                     renderInput={(params) => {return <TextField {...params} />}}
-                                    value={this.props.birthDate}
+                                    value={(this.props.memberToUpdate && !this.props.editEnabled ? this.props.memberToUpdate.member.birthDate : (this.props.memberToUpdate ? this.props.memberToUpdate.member.birthDate : this.props.currentChildValue.birthDate))}
                                     onChange={this.handleBirthDateChange}
                                     disabled={!this.props.editEnabled}
                                 />

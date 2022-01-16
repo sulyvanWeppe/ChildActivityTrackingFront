@@ -1,6 +1,7 @@
 import { CardContent, Card, Avatar, Grid, Typography } from '@mui/material';
 import React from 'react';
 import AddFamilyMemberDialog from './AddFamilyMemberDialog';
+import * as GenericUtils from '../../Utils/genericUtils';
 
 class FamilyCard extends React.Component {
 
@@ -16,17 +17,12 @@ class FamilyCard extends React.Component {
 
     handleDialogClose = () => {this.setState({addFamilyMemberDialogOpen:false});}
 
-    getInitialFromUserLogin = (userLogin) => {
-        return userLogin.charAt(0);
-    }
-
     handleSelectMember = (e) => {
         this.props.onSetFocusOnMember(e.target.attributes.getNamedItem("membertype").value, e.target.attributes.getNamedItem("memberid").value);
     }
 
     render () {
         var membersDisplay;
-        var familyParents;
         if (this.props.members && this.props.members.length>0) {
             membersDisplay = this.props.members.map((member) =>
                 <Grid item sx={{display:'flex', flexDirection:'column', marginLeft:'4%'}} key={member.member.firstName+member.member.lastName}>
@@ -36,13 +32,11 @@ class FamilyCard extends React.Component {
                         membertype={member.type}
                         memberid={member.member.id}
                         onClick={this.handleSelectMember}>
-                        {this.getInitialFromUserLogin(member.member.firstName)}
+                        {GenericUtils.getInitialFromUserLogin(member.member.firstName)}
                     </Avatar>
                     <Typography variant='button' sx={{fontSize:10, color:'#8c8c89'}}>{member.member.firstName}</Typography>
                 </Grid>
             );
-
-            familyParents = this.props.members.filter((member) => {return member.type==="parent"});
         }
 
         return (
@@ -60,7 +54,7 @@ class FamilyCard extends React.Component {
                                     onValidate={this.props.onRefresh}
                                     dialogColor={this.props.color}
                                     userId={this.props.userId}
-                                    parents={familyParents}/>
+                                    members={this.props.members}/>
                                 {membersDisplay}
                         </Grid>
                     </CardContent>

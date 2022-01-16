@@ -1,3 +1,4 @@
+import { TrainRounded } from '@mui/icons-material';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import axios from 'axios';
 import React from 'react';
@@ -10,7 +11,7 @@ class AddFamilyMemberDialog extends React.Component {
         super(props);
 
         this.state = {
-            familyMemberType: this.props.memberType ?? "parent",
+            familyMemberType: this.props.member ? this.props.member.type : "parent",
             parent:{
                 firstName: null,
                 lastName: null,
@@ -84,57 +85,91 @@ class AddFamilyMemberDialog extends React.Component {
 
     handleValidate = () => {
         if (this.state.familyMemberType === "parent") {
-            var newParent = {
-                userId: this.props.userId,
-                firstName: this.state.parent.firstName,
-                lastName: this.state.parent.lastName,
-                emailAddress: this.state.parent.email
-            }
 
-            axios.post('http://localhost:9443/parent/', newParent)
-                .then(res => {
-                    this.props.onValidate();
-                    this.props.onClose();
-                })
-                .catch(err => alert(err));
-        } else if (this.state.familyMemberType === "child") {
-            var newChild = {
-                firstName: this.state.child.firstName,
-                lastName: this.state.child.lastName, 
-                parent1Id: this.state.child.parent1,
-                parent2Id: this.state.child.parent2,
-                birthDate: this.state.child.birthDate
-            }
+            if (this.props.isUpdateExistingMember) {
+                var newParent = {
+                    id: this.props.member.member.id,
+                    userId: this.props.userId,
+                    firstName: (this.state.parent.firstName ? this.state.parent.firstName : this.props.member.member.firstName),
+                    lastName: (this.state.parent.lastName ? this.state.parent.lastName : this.props.member.member.lastName),
+                    emailAddress: (this.state.parent.email ? this.state.parent.email : this.props.member.member.emailAddress)
+                }
 
-            axios.post('http://localhost:9443/child/', newChild)
+                axios.put('http://localhost:9443/parent/', newParent)
                 .then(res => {
                     this.props.onValidate(true);
                     this.props.onClose();
                 })
                 .catch(err => alert(err));
+            }
+            else {
+                var newParent = {
+                    userId: this.props.userId,
+                    firstName: this.state.parent.firstName,
+                    lastName: this.state.parent.lastName,
+                    emailAddress: this.state.parent.email
+                };
+
+                axios.post('http://localhost:9443/parent/', newParent)
+                .then(res => {
+                    this.props.onValidate();
+                    this.props.onClose();
+                })
+                .catch(err => alert(err));
+            }
+        } else if (this.state.familyMemberType === "child") {
+            if (this.props.isUpdateExistingMember) {
+                var newChild = {
+                    id: this.props.member.member.id,
+                    firstName: (this.state.child.firstName ? this.state.child.firstName : this.props.member.member.firstName),
+                    lastName: (this.state.child.lastName ? this.state.child.lastName : this.props.member.member.lastName),
+                    parent1Id: (this.state.child.parent1 ? this.state.child.parent1 : this.props.member.member.parent1Id),
+                    parent2Id: (this.state.child.parent2 ? this.state.child.parent2 : this.props.member.member.parent2Id),
+                    birthDate: (this.state.child.birthDate ? this.state.child.birthDate : this.props.member.member.birthDate)
+                };
+
+                axios.put('http://localhost:9443/child/', newChild)
+                    .then(res => {
+                        this.props.onValidate(true);
+                        this.props.onClose();
+                    })
+                    .catch(err => alert(err));
+            }
+            else {
+                var newChild = {
+                    firstName: this.state.child.firstName,
+                    lastName: this.state.child.lastName, 
+                    parent1Id: this.state.child.parent1,
+                    parent2Id: this.state.child.parent2,
+                    birthDate: this.state.child.birthDate
+                }
+
+                axios.post('http://localhost:9443/child/', newChild)
+                    .then(res => {
+                        this.props.onValidate(true);
+                        this.props.onClose();
+                    })
+                    .catch(err => alert(err));
+            }
         }
     };
 
     render() {
-        var familyParent1;
-        var familyParent2;
-        if (this.props.parents) {
-            familyParent1 = {id:this.props.parents[0].member.id, firstName:this.props.parents[0].member.firstName, lastName:this.props.parents[0].member.lastName}
-            familyParent2 = {id:this.props.parents[1].member.id, firstName:this.props.parents[1].member.firstName, lastName:this.props.parents[1].member.lastName}
-        }
-
         var content;
         if (this.state.familyMemberType === "parent") {
-            content = <ParentInfoEdit editEnabled={true} onFieldUpdate={this.handleParentFieldChange}/>;
+            content = <ParentInfoEdit 
+                member={this.props.member}
+                editEnabled={true} 
+                onFieldUpdate={this.handleParentFieldChange}/>;
         }
         else if(this.state.familyMemberType === "child") {
             content = <ChildInfoEdit 
                         editEnabled={true} 
                         onFieldUpdate={this.handleChildFieldChange} 
                         onComposedFieldUpdate={this.handleChildComposedFieldChange} 
-                        parent1={familyParent1}
-                        parent2={familyParent2}
-                        birthDate={this.state.child.birthDate}/>;
+                        memberToUpdate={this.props.member}
+                        currentChildValue={this.state.child}
+                        members={this.props.members}/>;
         }
 
         return (

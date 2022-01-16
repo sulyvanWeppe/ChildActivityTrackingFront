@@ -3,6 +3,7 @@ import React from 'react'
 import { Edit } from '@mui/icons-material'
 import ParentInfoEdit from './ParentInfoEdit';
 import AddFamilyMemberDialog from './AddFamilyMemberDialog';
+import * as GenericUtils from '../../Utils/genericUtils';
 
 class ParentCard extends React.Component {
     constructor(props) {
@@ -25,10 +26,10 @@ class ParentCard extends React.Component {
                         <CardMedia >
                             <Grid container>
                                 <Grid item xs={0} sx={{marginTop:'0.5%', marginBottom:'0.5%', marginLeft:'0.5%'}}>
-                                    <Avatar sx={{ backgroundColor:this.props.color}}>C</Avatar>
+                                    <Avatar sx={{ backgroundColor:this.props.color}}>{GenericUtils.getInitialFromUserLogin(this.props.member.member.firstName)}</Avatar>
                                 </Grid>
                                 <Grid item xs={4} sx={{textAlign:'left', marginLeft:'1%', marginTop:'0.5%', marginBottom:'0.5%'}}>
-                                    <Typography variant="h6" sx={{textAlign:'left'}}>Camille Weppe-Ansart</Typography>
+                                    <Typography variant="h6" sx={{textAlign:'left'}}>{this.props.member.member.firstName+' '+this.props.member.member.lastName}</Typography>
                                 </Grid>
                                 <Grid item xs={7} sx={{marginTop:'0.5%', marginBottom:'0.5%', textAlign:'right'}}>
                                     <Button variant="contained" color="secondary" onClick={this.handleClick}>
@@ -38,15 +39,18 @@ class ParentCard extends React.Component {
                                     <AddFamilyMemberDialog
                                         isOpen={this.state.editParentDialogOpen}
                                         onClose={this.handleDialogClose}
+                                        onValidate={this.props.onRefresh}
+                                        userId={this.props.userId}
                                         dialogColor={this.props.color}
-                                        memberType="parent"
-                                        isTypeFrozen={true}/>
+                                        member={this.props.member}
+                                        isTypeFrozen={true}
+                                        isUpdateExistingMember={true}/>
                                 </Grid>
                             </Grid>
                         </CardMedia>
                         <Divider/>
                         <CardContent>
-                            <ParentInfoEdit editEnabled={false}/>
+                            <ParentInfoEdit member={this.props.member} editEnabled={false}/>
                         </CardContent>
                     </CardActionArea>
                 </Card>

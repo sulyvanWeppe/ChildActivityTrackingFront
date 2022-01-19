@@ -112,7 +112,7 @@ class AddFamilyMemberDialog extends React.Component {
 
                 axios.post('http://localhost:9443/parent/', newParent)
                 .then(res => {
-                    this.props.onValidate();
+                    this.props.onValidate(true);
                     this.props.onClose();
                 })
                 .catch(err => alert(err));

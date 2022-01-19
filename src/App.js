@@ -139,7 +139,7 @@ class App extends React.Component {
     /**
      * User info
      */
-    axios.get('http://localhost:9443/user/574')
+    axios.get('http://localhost:9443/user/1')
       .then(resUserData => {
         const resUser = resUserData.data;
         this.setState({
@@ -182,8 +182,6 @@ class App extends React.Component {
         .catch(err => alert(err));
       })
       .catch(err => alert(err));
-      
-      
         
   }
 

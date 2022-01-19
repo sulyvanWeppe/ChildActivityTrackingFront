@@ -62,10 +62,7 @@ class ChildInfoEdit extends React.Component {
                                     onChange={this.handleParent1Change}
                                     disabled={!this.props.editEnabled}
                                     value={(this.props.memberToUpdate && !this.props.editEnabled) ? this.props.memberToUpdate.member.parent1Id : this.props.currentChildValue.parent1}
-                                    renderValue={(selected) => {
-                                        const selectedParent = FamilyUtils.getMemberFromFamilyByIdAndType(selected, "parent", this.props.members);
-                                        return selectedParent.member.firstName+' '+selectedParent.member.lastName;
-                                    }}
+                                    
                                     >
                                     {parent1Item}
                                     {parent2Item}
@@ -79,10 +76,7 @@ class ChildInfoEdit extends React.Component {
                                     onChange={this.handleParent2Change}
                                     disabled={!this.props.editEnabled}
                                     value={(this.props.memberToUpdate && !this.props.editEnabled) ? this.props.memberToUpdate.member.parent2Id : this.props.currentChildValue.parent2}
-                                    renderValue={(selected) => {
-                                        const selectedParent = FamilyUtils.getMemberFromFamilyByIdAndType(selected, "parent", this.props.members);
-                                        return selectedParent.member.firstName+' '+selectedParent.member.lastName;
-                                    }}
+                                    
                                 >
                                     {parent1Item}
                                     {parent2Item}
@@ -95,7 +89,7 @@ class ChildInfoEdit extends React.Component {
                                     id="birthDateField"
                                     label="Birth date"
                                     renderInput={(params) => {return <TextField {...params} />}}
-                                    value={(this.props.memberToUpdate && !this.props.editEnabled ? this.props.memberToUpdate.member.birthDate : (this.props.memberToUpdate ? this.props.memberToUpdate.member.birthDate : this.props.currentChildValue.birthDate))}
+                                    value={(this.props.memberToUpdate && !this.props.editEnabled ? this.props.memberToUpdate.member.birthDate : (this.props.currentChildValue && this.props.currentChildValue.birthDate ?  this.props.currentChildValue.birthDate : this.props.memberToUpdate.member.birthDate))}
                                     onChange={this.handleBirthDateChange}
                                     disabled={!this.props.editEnabled}
                                 />

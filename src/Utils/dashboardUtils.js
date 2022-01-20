@@ -6,11 +6,19 @@ async function getActivityTrackingByChildIdActivitiesId(childId,activities) {
         try {
             const actTrackReq = await axios.get('http://localhost:9443/activitytracking/childid/activityid/'+childId+'/'+activities[i].id);
             if (actTrackReq.status.toString() === "200") {
-                actTrackMap.set(activities[i].name,actTrackReq.data);
+                const actTrackMapValue = {
+                    activityMeasureLabel: activities[i].measureLabel,
+                    actTrackRecords: actTrackReq.data
+                }
+                actTrackMap.set(activities[i].name,actTrackMapValue);
             }
         } catch(err) {
             if (err.response.status.toString() === "404") {
-                actTrackMap.set(activities[i].name,undefined);
+                const actTrackMapValue = {
+                    activityMeasureLabel: activities[i].measureLabel,
+                    actTrackRecords: undefined
+                }
+                actTrackMap.set(activities[i].name,actTrackMapValue);
             }
             else {
                 alert("An error occured when trying to get "+activities[i].name+" for childId "+childId);
@@ -43,22 +51,4 @@ export async function getActivityTrackingByChildId(childId) {
     }
 
     return actTrackRecordsMap;
-}
-
-export function getActivityNameById(activityId) {
-    axios.get('http://localhost:9443/activity/'+activityId)
-        .then(res => console.log(res.data))
-        .catch(err => alert(err));
-}
-
-export async function getActivityTrackingPromiseByChildId(childId) {
-    var activityTrackingPromise = await axios.get('http://localhost:9443/activitytracking/childid/'+childId);
-    
-    return activityTrackingPromise;
-}
-
-export async function getActivityNamePromiseById(activityId) {
-    var returnedPromise = axios.get('http://localhost:9443/activity/'+activityId);
-
-    return returnedPromise;
 }

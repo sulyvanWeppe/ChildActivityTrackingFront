@@ -22,48 +22,8 @@ class Dashboard extends React.Component {
         { 
             this.setState({isRefreshNeeded:false}); 
 
-            var activities;
-            var actTrackRecordsMap = new Map();
-        
-            /*try {
-                //Get all activity types
-                const activitiesReq = await axios.get('http://localhost:9443/activity');
-                if (activitiesReq.status.toString() === "200") {
-                    activities = activitiesReq.data;
-                    await activities.forEach(async (activity) => {
-                        //Get activity tracking records for this activity type and the current child
-                        try {
-                            const actTrackReq = await axios.get('http://localhost:9443/activitytracking/childid/activityid/'+this.state.childId+'/'+activity.id);
-                            if (actTrackReq.status.toString() === "200") {
-                                actTrackRecordsMap.set(activity.name,actTrackReq.data);
-                                this.setState({activityTrackingRecords:actTrackRecordsMap});
-                            }
-                        } catch(err) {
-                            if (err.response.status.toString() === "404") {
-                                actTrackRecordsMap.set(activity.name,undefined);
-                                this.setState({activityTrackingRecords:actTrackRecordsMap});
-                            }
-                            else {
-                                alert("An error occured when trying to get "+activity.name+" for childId "+this.state.childId);
-                            }
-                        }
-                    });
-                    
-                }
-            } catch(err) {
-                if (err.response.status.toString() === "404") {
-                    alert("Error : No activity type is defined");
-                }
-                else {
-                    alert("An error occured while trying to get activity types");
-                }
-            }*/
             const actTrackMap = await DashboardUtils.getActivityTrackingByChildId(this.state.childId);
-            this.setState({isRefreshNeeded:false});
-            console.log("before set activityTrackingRecords");
-            console.log(actTrackMap);
             this.setState({activityTrackingRecords:actTrackMap});
-            console.log("after set activityTrackingRecords");
         }
     }   
 
@@ -72,36 +32,48 @@ class Dashboard extends React.Component {
         {  
             this.setState({isRefreshNeeded:false}); 
 
-            var activities;
-            var actTrackRecordsMap = new Map();
-        
-            
             const actTrackMap = await DashboardUtils.getActivityTrackingByChildId(this.state.childId);
-            this.setState({isRefreshNeeded:false});
-            console.log("before set activityTrackingRecords");
-            console.log(actTrackMap);
             this.setState({activityTrackingRecords:actTrackMap});
-            console.log("after set activityTrackingRecords");
         }
         
     }
 
+    getCardItemRows = (actKey) => {
+        const rows = [];
+        const actTrackRecords = this.state.activityTrackingRecords.get(actKey).actTrackRecords;
+        if (actTrackRecords) {
+            //For every records corresponding to the given activity (actKey)
+            //Create the row data and add it to the complete row data list (rows)
+            for(var i=0;i<actTrackRecords.length;i++) 
+            {    const row = {
+                    id : i,
+                    time: actTrackRecords[i].activityTimestamp,
+                    type: actTrackRecords[i].activityRemark
+                };
+                rows.push(row);
+            }
+        }
+
+        return rows;
+    }
+
     render () {
-        console.log("render");
-        console.log(this.state);
         var cards;
         if (this.state.activityTrackingRecords) {
-            console.log(this.state.activityTrackingRecords);
-            //const activities = Array.from(this.props.data.keys());
             const activities = Array.from(this.state.activityTrackingRecords.keys());
-            console.log(activities);
+            
+            activities.forEach(e =>  console.log(this.state.activityTrackingRecords.get(e)));
+
             cards = activities.map((key) => 
             <Box component={Grid} item xs={6}>
                 <DashboardCard 
                     cardColor={this.props.color} 
                     cardTitle={key} 
-                    gridRows={this.props.data.get(key).rows} 
-                    gridColumns={this.props.data.get(key).columns} 
+                    gridRows={this.getCardItemRows(key)} 
+                    gridColumns={[
+                        {field:'time', headerName:'Time', flex:0.3},
+                        {field:'type', headerName:this.state.activityTrackingRecords.get(key).activityMeasureLabel, flex:1}
+                    ]} 
                     labelMapping={this.props.labelMapping}/>
             </Box>);
         }

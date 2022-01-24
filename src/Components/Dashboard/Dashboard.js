@@ -17,6 +17,10 @@ class Dashboard extends React.Component {
         }
     }
 
+    updateRefreshNeeded = (isRefreshNeeded) => {
+        this.setState({isRefreshNeeded:isRefreshNeeded});
+    }
+
     async componentDidMount() {
         if (this.state.isRefreshNeeded)
         { 
@@ -46,7 +50,7 @@ class Dashboard extends React.Component {
             //Create the row data and add it to the complete row data list (rows)
             for(var i=0;i<actTrackRecords.length;i++) 
             {    const row = {
-                    id : i,
+                    id : actTrackRecords[i].id,
                     time: actTrackRecords[i].activityTimestamp,
                     type: actTrackRecords[i].activityRemark
                 };
@@ -68,13 +72,17 @@ class Dashboard extends React.Component {
             <Box component={Grid} item xs={6}>
                 <DashboardCard 
                     cardColor={this.props.color} 
-                    cardTitle={key} 
+                    cardTitle={this.state.activityTrackingRecords.get(key).activityName} 
                     gridRows={this.getCardItemRows(key)} 
                     gridColumns={[
                         {field:'time', headerName:'Time', flex:0.3},
                         {field:'type', headerName:this.state.activityTrackingRecords.get(key).activityMeasureLabel, flex:1}
                     ]} 
-                    labelMapping={this.props.labelMapping}/>
+                    remarkLabel={this.state.activityTrackingRecords.get(key).activityMeasureLabel}
+                    childId={this.state.childId}
+                    activityId={key}
+                    refresh={this.updateRefreshNeeded}
+                    />
             </Box>);
         }
     

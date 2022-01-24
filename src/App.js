@@ -14,99 +14,6 @@ import axios from 'axios';
 
 const appColor = "#9c27b0";
 
-const activityLabelMap = new Map();
-activityLabelMap.set("Food","Meal");
-activityLabelMap.set("Sleep", "Sleep");
-activityLabelMap.set("Diaper", "Baby Changing");
-activityLabelMap.set("Other activities", "Activities");
-const activityRemarkLabelMap = new Map();
-activityRemarkLabelMap.set("Food","Meal");
-activityRemarkLabelMap.set("Sleep", "Duration");
-activityRemarkLabelMap.set("Diaper", "Type");
-activityRemarkLabelMap.set("Other activities", "Activity");
-
-var activityLabelMappingFromType = {
-  activity: activityLabelMap,
-  remark:activityRemarkLabelMap
-};
-
-
-
-    /**
-     * Data initialisation
-     */
-    //Food
-    var foodRows = [
-      {id: 1, time: '2021/11/29 09:00 AM', meal:'180ml of Milk (7cups)'},
-      {id: 2, time: '2021/11/29 10:30 AM', meal:'Small cake'},
-      {id: 3, time: '2021/11/29 11:30 AM', meal:'Full meal : Carotte and meat'},
-      {id: 4, time: '2021/11/29 03:00 PM', meal:'Piece of bread'},
-      {id: 5, time: '2021/11/29 07:15 PM', meal:'Full meal : Butternut + rice + orange; and 180ml of milk (7cups)'}
-    ];
-  
-    var foodColumns = [
-        {field:'time', headerName:'Time', flex:0.3},
-        {field:'meal', headerName:activityLabelMappingFromType.remark.get("Food"), flex:1}
-    ];
-  
-    var foodData = {
-      rows: foodRows,
-      columns: foodColumns
-    };
-  
-    //Sleep
-    var sleepRows = [
-      {id: 1, time: '2021/11/29 10:40 AM', duration:'20min'},
-      {id: 2, time: '2021/11/29 02:30 PM', duration:'30min'}
-    ];
-  
-    var sleepColumns = [
-        {field:'time', headerName:'Time', flex:0.3},
-        {field:'duration', headerName:activityLabelMappingFromType.remark.get("Sleep"), flex:1}
-    ];
-  
-    var sleepData = {
-      rows: sleepRows,
-      columns: sleepColumns
-    };
-  
-    //Diaper
-    var diaperRows = [
-      {id: 1, time: '2021/11/29 09:20 AM', type:'Poopoo'}
-    ];
-  
-    var diaperColumns = [
-        {field:'time', headerName:'Time', flex:0.3},
-        {field:'type', headerName:activityLabelMappingFromType.remark.get("Diaper"), flex:1}
-    ];
-  
-    var diaperData = {
-      rows: diaperRows,
-      columns: diaperColumns
-    };
-   
-    //Other activities
-    var othRows = [
-      {id: 1, time: '2021/11/29 09:10 AM', activity:'Painting'},
-    ];
-  
-    var othColumns = [
-        {field:'time', headerName:'Time', flex:0.3},
-        {field:'activity', headerName:activityLabelMappingFromType.remark.get("Other activities"), flex:1}
-    ];
-  
-    var othData = {
-      rows: othRows,
-      columns: othColumns
-    };
-  
-    const activityData = new Map();
-    activityData.set("Food", foodData);
-    activityData.set("Sleep", sleepData);
-    activityData.set("Diaper", diaperData);
-    activityData.set("Other activities", othData); 
-  
-
 class App extends React.Component {
 
   constructor(props) {
@@ -224,7 +131,7 @@ class App extends React.Component {
     var currentLayout;
     switch (this.state.activeLayout) {
       case "Dashboard":
-        currentLayout = <Dashboard color={appColor} data={activityData} labelMapping={activityLabelMappingFromType}/>;
+        currentLayout = <Dashboard color={appColor}/>;
         break;
       case "My Family":
         currentLayout = <MyFamily color={appColor} userId={this.state.user.id}/>; 

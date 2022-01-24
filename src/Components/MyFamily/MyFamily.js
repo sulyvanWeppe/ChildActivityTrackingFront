@@ -91,6 +91,13 @@ class MyFamily extends React.Component {
         this.setState({isGetFamilyMemberNeeded:false});
     }
 
+    componentDidMount() {
+        //Get all family members linked to the user
+        if (this.props.userId && this.props.userId>0 && this.state.isGetFamilyMemberNeeded) {
+            this.getFamilyMembers(this.props.userId);
+        }       
+    }
+
     componentDidUpdate() {
         //Get all family members linked to the user
         if (this.props.userId && this.props.userId>0 && this.state.isGetFamilyMemberNeeded) {

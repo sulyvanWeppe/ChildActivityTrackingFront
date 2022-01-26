@@ -10,6 +10,7 @@ import UserProfile from './Components/UserProfile/UserProfile';
 import MyFamily from './Components/MyFamily/MyFamily';
 import React from 'react';
 import axios from 'axios';
+import UserLogin from './Components/Login/UserLogin';
 
 
 const appColor = "#9c27b0";
@@ -162,6 +163,17 @@ class App extends React.Component {
 
     return (
       <div className="App">
+        <UserLogin/>
+      </div>
+    );
+  }
+
+}
+
+export default App;
+
+/**
+ 
         <Box sx={{ display: 'flex'}}>
           <CssBaseline />
           <MainDrawer xs={1} handleItemChange={this.handleLayoutChange}></MainDrawer>
@@ -171,10 +183,4 @@ class App extends React.Component {
               {currentLayout}
           </Box>      
         </Box>
-      </div>
-    );
-  }
-
-}
-
-export default App;
+ */

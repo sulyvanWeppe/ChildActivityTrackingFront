@@ -131,7 +131,8 @@ class App extends React.Component {
     var currentLayout;
     switch (this.state.activeLayout) {
       case "Dashboard":
-        currentLayout = <Dashboard color={appColor}/>;
+        currentLayout = <Dashboard color={appColor}
+          userId={this.state.user.id}/>;
         break;
       case "My Family":
         currentLayout = <MyFamily color={appColor} userId={this.state.user.id}/>; 

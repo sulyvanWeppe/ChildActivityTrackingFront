@@ -1,8 +1,12 @@
 import React from 'react'
-import { Grid, Box } from '@mui/material';
+import { Grid, Box, Avatar, Typography, Card, CardContent, TextField, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import DashboardCard from './DashboardCard';
 import axios from 'axios';
 import * as DashboardUtils from '../../Utils/dashboardUtils';
+import * as FamilyUtils from '../../Utils/familyUtils';
+import { DatePicker, LocalizationProvider, StaticTimePicker } from '@mui/lab';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import DateChildSelectionCard from './DateChildSelectionCard';
 
 class Dashboard extends React.Component {
 
@@ -10,7 +14,8 @@ class Dashboard extends React.Component {
         super(props);
 
         this.state = {
-            childId: 5,
+            children: undefined,
+            childId: undefined,
             date: new Date(),
             activityTrackingRecords: undefined,
             isRefreshNeeded: true
@@ -26,8 +31,14 @@ class Dashboard extends React.Component {
         { 
             this.setState({isRefreshNeeded:false}); 
 
-            const actTrackMap = await DashboardUtils.getActivityTrackingByChildId(this.state.childId);
-            this.setState({activityTrackingRecords:actTrackMap});
+            //Get family's children
+            const familyChildren = await FamilyUtils.getFamilyChildrenByUserId(this.props.userId) 
+            this.setState({children: familyChildren});
+
+            if (this.state.childId && this.state.date) {
+                const actTrackMap = await DashboardUtils.getActivityTrackingByChildIdDate(this.state.childId, this.state.date);
+                this.setState({activityTrackingRecords:actTrackMap});
+            }
         }
     }   
 
@@ -36,8 +47,14 @@ class Dashboard extends React.Component {
         {  
             this.setState({isRefreshNeeded:false}); 
 
-            const actTrackMap = await DashboardUtils.getActivityTrackingByChildId(this.state.childId);
-            this.setState({activityTrackingRecords:actTrackMap});
+            //Get family's children
+            const familyChildren = await FamilyUtils.getFamilyChildrenByUserId(this.props.userId); 
+            this.setState({children: familyChildren});
+
+            if (this.state.childId && this.state.date) {
+                const actTrackMap = await DashboardUtils.getActivityTrackingByChildIdDate(this.state.childId, this.state.date);
+                this.setState({activityTrackingRecords:actTrackMap});
+            }
         }
         
     }
@@ -61,14 +78,24 @@ class Dashboard extends React.Component {
         return rows;
     }
 
+    handleDateChange = (newDate) => {
+        this.setState({date:newDate});
+        this.setState({isRefreshNeeded:true}); 
+    }
+
+    handleChildChange = (childId) => {
+        this.setState({childId: childId});
+        this.setState({isRefreshNeeded:true});
+    }
+
     render () {
-        var cards;
+        var activityDashboardCards;
         if (this.state.activityTrackingRecords) {
             const activities = Array.from(this.state.activityTrackingRecords.keys());
             
             activities.forEach(e =>  console.log(this.state.activityTrackingRecords.get(e)));
 
-            cards = activities.map((key) => 
+            activityDashboardCards = activities.map((key) => 
             <Box component={Grid} item xs={6}>
                 <DashboardCard 
                     cardColor={this.props.color} 
@@ -86,10 +113,17 @@ class Dashboard extends React.Component {
             </Box>);
         }
     
+        var childSelectionCard = <DateChildSelectionCard
+            date={this.state.date}
+            onDateChange={this.handleDateChange}
+            children={this.state.children}
+            onChildChange={this.handleChildChange}/>
+
         return (
             <div>
+                {childSelectionCard}
                 <Grid container spacing={2}>
-                    {cards}
+                    {activityDashboardCards}
                 </Grid>
             </div>
         );

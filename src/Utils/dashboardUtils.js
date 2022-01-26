@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-async function getActivityTrackingByChildIdActivitiesId(childId,activities) {
+async function getActivityTrackingByChildIdActivitiesIdDate(childId,activities,date) {
     var actTrackMap = new Map();
     for (var i=0; i<activities.length; i++){
         try {
-            const actTrackReq = await axios.get('http://localhost:9443/activitytracking/childid/activityid/'+childId+'/'+activities[i].id);
+            const formatedDate = date.toISOString().split('T')[0]+' 00:00:00';
+            const actTrackReq = await axios.get('http://localhost:9443/activitytracking/childid/activityid/date/'+childId+'/'+activities[i].id+'/'+formatedDate);
             if (actTrackReq.status.toString() === "200") {
                 const actTrackMapValue = {
                     activityName: activities[i].name,
@@ -23,7 +24,7 @@ async function getActivityTrackingByChildIdActivitiesId(childId,activities) {
                 actTrackMap.set(activities[i].id,actTrackMapValue);
             }
             else {
-                alert("An error occured when trying to get "+activities[i].name+" for childId "+childId);
+                alert("An error occured when trying to get "+activities[i].name+" for childId "+childId+ " and date : "+date);
             }
         }
     }
@@ -31,7 +32,7 @@ async function getActivityTrackingByChildIdActivitiesId(childId,activities) {
     return actTrackMap;
 }
 
-export async function getActivityTrackingByChildId(childId) {
+export async function getActivityTrackingByChildIdDate(childId, date) {
     var activities;
     var actTrackRecordsMap;
 
@@ -41,7 +42,7 @@ export async function getActivityTrackingByChildId(childId) {
         if (activitiesReq.status.toString() === "200") {
             activities = activitiesReq.data;
             //For every activity type get activityTracking records for the child
-            actTrackRecordsMap = await getActivityTrackingByChildIdActivitiesId(childId,activities);
+            actTrackRecordsMap = await getActivityTrackingByChildIdActivitiesIdDate(childId,activities,date);
         }
     } catch(err) {
         if (err.response.status.toString() === "404") {

@@ -1,5 +1,5 @@
 import React from "react";
-import { LocalizationProvider, StaticTimePicker } from '@mui/lab';
+import { DateTimePicker, LocalizationProvider, StaticTimePicker } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import {Typography, Dialog, DialogContent, DialogTitle, DialogActions, Button, TextField} from '@mui/material';
 import axios from "axios";
@@ -18,6 +18,10 @@ class AddActivityDialog extends React.Component {
 
 
     handleClose = () => {
+        this.props.onClose();
+    }
+
+    handleValidate = () => {
         //Create activity tracking record for POST request
         const newActivityRecord = {
             childId:this.props.childId,
@@ -51,12 +55,12 @@ class AddActivityDialog extends React.Component {
                     <DialogTitle sx={{backgroundColor:this.props.dialogColor, color:'white'}}>
                         <Typography variant="h5">New {this.props.dialogTitle}</Typography>
                     </DialogTitle>
-                    <DialogContent>
+                    <DialogContent sx={{marginTop:'4%'}}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <StaticTimePicker value={this.props.time}
+                            <DateTimePicker value={this.props.time}
                                 onChange={(newValue) => this.handleTimeUpdate(newValue)}
                                 renderInput={(params) => {return <TextField {...params} />}}>
-                            </StaticTimePicker>
+                            </DateTimePicker>
                         </LocalizationProvider>
                         <TextField 
                             id="activityTextField" 
@@ -67,7 +71,7 @@ class AddActivityDialog extends React.Component {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleClose}>Cancel</Button>
-                        <Button onClick={this.handleClose}>Validate</Button>
+                        <Button onClick={this.handleValidate}>Validate</Button>
                     </DialogActions>
                 </Dialog>
             </div>

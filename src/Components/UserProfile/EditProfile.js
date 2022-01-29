@@ -9,8 +9,47 @@ class EditProfile extends React.Component {
         super(props);
 
         this.state = {
-            isEditEnabled: false
+            isEditEnabled: false,
+            currentUser:{
+                login: undefined,
+                email: undefined,
+                pwd: undefined
+            }
         };
+    }
+
+    componentDidMount() {
+        this.setState((prevState) => {
+            return (
+                {
+                    isEditEnabled: prevState.isEditEnabled,
+                    currentUser: {
+                        login: this.props.userLogin,
+                        email: this.props.userEmail,
+                        pwd: this.props.userPassword
+                    }
+                }
+            )
+        })
+    }
+
+    componentDidUpdate() {
+        //Check if the user has not yet manually updated the info
+        if (!this.state.currentUser.login && ! this.state.currentUser.pwd && !this.state.currentUser.email)
+        {
+            this.setState((prevState) => {
+                return (
+                    {
+                        isEditEnabled: prevState.isEditEnabled,
+                        currentUser: {
+                            login: this.props.userLogin,
+                            email: this.props.userEmail,
+                            pwd: this.props.userPassword
+                        }
+                    }
+                )
+            })
+        }
     }
 
     handleUpdateClick = (e) => {
@@ -20,28 +59,67 @@ class EditProfile extends React.Component {
             this.setState({isEditEnabled: true});
         }
         else {
-            //Form fields' value
-            var newLogin = document.getElementById('loginField').value;
-            newLogin = ((newLogin && newLogin!=="") ? newLogin : this.props.userLogin);
-            var newPassword = document.getElementById('passwordField').value;
-            newPassword = ((newPassword && newPassword!=="") ? newPassword : this.props.userPassword);
-            var newEmail = document.getElementById('emailField').value;
-            newEmail = ((newEmail && newEmail!=="") ? newEmail : this.props.userEmail); 
             //DB and state update
             const userToUpdate = {
                 id: this.props.userId,
-                emailAddress: newEmail,
-                login: newLogin,
-                password: newPassword
+                emailAddress: this.state.currentUser.email,
+                login: this.state.currentUser.login,
+                password: this.state.currentUser.pwd
             }
+
             axios.put('http://localhost:9443/user/', userToUpdate)
                 .then(res => {
                     this.props.onUpdate(userToUpdate);
                 })
-                .catch(err => {alert(err)});
+                .catch(err => {alert("An error occured when trying to update user's information {"+err+"}")});
         
             this.setState({isEditEnabled: false});
         }
+    }
+
+    handleLoginChange = (e) => {
+        this.setState((prevState) => {
+            return (
+                {
+                    isEditEnabled: prevState.isEditEnabled,
+                    currentUser: {
+                        login: e.target.value,
+                        email: prevState.currentUser.email,
+                        pwd: prevState.currentUser.pwd
+                    }
+                }
+            )
+        })
+    }
+
+    handleEmailChange = (e) => {
+        this.setState((prevState) => {
+            return (
+                {
+                    isEditEnabled: prevState.isEditEnabled,
+                    currentUser: {
+                        login: prevState.currentUser.login,
+                        email: e.target.value,
+                        pwd: prevState.currentUser.pwd
+                    }
+                }
+            )
+        })
+    }
+
+    handlePwdChange = (e) => {
+        this.setState((prevState) => {
+            return (
+                {
+                    isEditEnabled: prevState.isEditEnabled,
+                    currentUser: {
+                        login: prevState.currentUser.login,
+                        email: prevState.currentUser.email,
+                        pwd: e.target.value
+                    }
+                }
+            )
+        })
     }
 
     render() {
@@ -61,6 +139,7 @@ class EditProfile extends React.Component {
                                         disabled={!this.state.isEditEnabled}
                                         placeholder={this.props.userLogin}
                                         variant="standard" 
+                                        onChange={this.handleLoginChange}
                                         sx={{width:'20%', marginLeft:'2%', marginRight:'20%'}}/>
                                     <TextField 
                                         id="passwordField" 
@@ -69,6 +148,7 @@ class EditProfile extends React.Component {
                                         placeholder={this.props.userPassword} 
                                         variant="standard" 
                                         type="password" 
+                                        onChange={this.handlePwdChange}
                                         sx={{ width: '20%' }}/>
                                 </Box>
                                 <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: '1%' }}>
@@ -78,6 +158,7 @@ class EditProfile extends React.Component {
                                         disabled={!this.state.isEditEnabled}
                                         placeholder={this.props.userEmail} 
                                         variant="standard" 
+                                        onChange={this.handleEmailChange}
                                         sx={{ marginLeft: '2%', width: '30%' }}/>
                                 </Box>
                             </Box>

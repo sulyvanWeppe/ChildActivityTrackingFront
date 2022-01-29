@@ -1,30 +1,23 @@
-import { Avatar, Grid, Box, Typography, Card, CardContent, SpeedDialAction, SpeedDial, Breadcrumbs } from '@mui/material';
+import { Avatar, Grid, Box, Typography, Card, CardContent, SpeedDialAction, SpeedDial, Breadcrumbs, createMuiTheme, CssBaseline } from '@mui/material';
+import { createTheme,ThemeProvider } from '@mui/material/styles'
 import React from 'react';
 import Image from './header3.png';
+import '../index.css';
 
-import { Home } from '@mui/icons-material';
+import { Home, PowerSettingsNew } from '@mui/icons-material';
+
+
+const myTheme = createTheme({
+    typography: {
+        h2:{
+            fontFamily: 'Varela Round'
+        }
+    }
+})
 
 const style = {
     backgroundImage: `url(${Image})`
 }
-const actions = [
-    { 
-        icon: <Avatar sx={{ bgcolor:'black', opacity:'0.8', width:'100%', height:'100%'}} style={{ text_align: "center" }}>S</Avatar>, 
-        name: 'Sulyvan'
-    },
-    {
-        icon: <Avatar sx={{ bgcolor:'black', opacity:'0.8', width:'100%', height:'100%'}} style={{ text_align: "center" }}>C</Avatar>, 
-        name: 'Camille'
-    },
-    {
-        icon: <Avatar sx={{ bgcolor:'black', opacity:'0.8', width:'100%', height:'100%'}} style={{ text_align: "center" }}>A</Avatar>, 
-        name: 'Arthur'
-    },
-    {
-        icon: <Avatar sx={{ bgcolor:'black', opacity:'0.8', width:'100%', height:'100%'}} style={{ text_align: "center" }}>N</Avatar>, 
-        name: 'Ninja'
-    }
-  ];
 
 class Header extends React.Component{
 
@@ -36,6 +29,7 @@ class Header extends React.Component{
         var userLoginInitial = this.getInitialFromUserLogin(this.props.userLogin).toUpperCase();
         return (
             <div style={{height:270, marginBottom: '0%'}}>
+                <ThemeProvider theme={myTheme}>
                 <Card sx={{height:'100%', marginTop:0}} style={style}>
                     <CardContent>
                         <Grid container spacing={2}>
@@ -46,7 +40,7 @@ class Header extends React.Component{
                             </Breadcrumbs>
                         </Box>
                         <Grid item xs={11} md={9}>
-                            <Typography variant="h2" >{this.props.userLogin}</Typography>
+                            <Typography variant="h2" >Newborn activity tracking</Typography>
                         </Grid>
                         <Grid item xs={1}>
 
@@ -57,12 +51,11 @@ class Header extends React.Component{
                                     icon={<Avatar sx={{ bgcolor:'black', opacity:'0.8', width:'100%', height:'100%'}} style={{ text_align: "center" }}>{userLoginInitial}</Avatar>}
                                     direction='down'
                                 >
-                                {actions.map((action) => (
                                   <SpeedDialAction
-                                    key={action.name}
-                                    icon={action.icon}
-                                    tooltipTitle={action.name}
-                                  />))}
+                                    icon={<PowerSettingsNew />}
+                                    tooltipTitle='Logout'
+                                    onClick={this.props.onLogOut}
+                                  />
                                 </SpeedDial>
                             </Box>   
                             
@@ -70,25 +63,10 @@ class Header extends React.Component{
                         </Grid>                        
                     </CardContent>
                 </Card>
+                </ThemeProvider>
             </div>
         );
     }
 }
 
 export default Header;
-/**
- * 
-                <Box >
-                    <Grid container spacing={2}>
-                        <Box component={Grid} md={2} item display={{xs:'none', md:'block'}}>
-                            <Typography variant='h5'>{this.props.layoutName}</Typography>
-                        </Box>
-                        <Grid item xs={11} md={9}>
-                            <Typography variant="h2" >{this.props.userLogin}</Typography>
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Avatar sx={{ bgcolor:'black', opacity:'0.8', marginRight:0,marginLeft:'auto'}} style={{ text_align: "center" }}>{userLoginInitial}</Avatar>
-                        </Grid>
-                    </Grid>
-                </Box>
- */

@@ -26,8 +26,13 @@ export async function getFamilyChildrenByUserId(userId) {
     const parents = await getFamilyParentByUserId(userId);
 
     //Second get the children
-    const firstIdParent = parents[0] ? parents[0].id : null;
-    const secondIdParent = parents[1] ? parents[1].id : null;
+    const firstIdParent = parents ? (parents[0] ? parents[0].id : undefined) : undefined;
+    const secondIdParent = parents ? (parents[1] ? parents[1].id : undefined) : undefined;
+    if (!firstIdParent || !secondIdParent)
+    {
+        return;
+    }
+    
     try {
         const childrenReq = await axios.get('http://localhost:9443/child/parentsid/'+firstIdParent+'/'+secondIdParent);
         return childrenReq.data;

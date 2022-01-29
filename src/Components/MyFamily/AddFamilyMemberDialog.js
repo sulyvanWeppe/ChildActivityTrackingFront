@@ -100,7 +100,7 @@ class AddFamilyMemberDialog extends React.Component {
                     this.props.onValidate(true);
                     this.props.onClose();
                 })
-                .catch(err => alert(err));
+                .catch(err => alert("An error occured when trying to update parent's information {"+err+"}"));
             }
             else {
                 var newParent = {
@@ -115,7 +115,7 @@ class AddFamilyMemberDialog extends React.Component {
                     this.props.onValidate(true);
                     this.props.onClose();
                 })
-                .catch(err => alert(err));
+                .catch(err => alert("An error occured when trying to create the parent {"+err+"}"));
             }
         } else if (this.state.familyMemberType === "child") {
             if (this.props.isUpdateExistingMember) {
@@ -133,7 +133,7 @@ class AddFamilyMemberDialog extends React.Component {
                         this.props.onValidate(true);
                         this.props.onClose();
                     })
-                    .catch(err => alert(err));
+                    .catch(err => alert("An error occured when trying to update child's information {"+err+"}"));
             }
             else {
                 var newChild = {
@@ -149,7 +149,7 @@ class AddFamilyMemberDialog extends React.Component {
                         this.props.onValidate(true);
                         this.props.onClose();
                     })
-                    .catch(err => alert(err));
+                    .catch(err => alert("An error occured when trying to create the child {"+err+"}"));
             }
         }
     };

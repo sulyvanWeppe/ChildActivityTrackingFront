@@ -37,7 +37,7 @@ class MainDrawer extends React.Component {
                         }}
                     variant= "permanent">
                         <Toolbar />
-                            <h2>UserLogin</h2>
+                            <h2>{this.props.userLogin}</h2>
                         <Divider sx={{backgroundColor:'white'}}/>
                         <List>
                             <ListItem disablePadding onClick={this.handleItemSelection}>

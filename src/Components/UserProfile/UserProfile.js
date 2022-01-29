@@ -4,7 +4,16 @@ import EditDoctor from './EditDoctor';
 
 class UserProfile extends React.Component {
 
+    constructor(props) {
+        super(props);
+
+        this.state= {
+            isRefreshNeeded: true
+        }
+    }
+
     render () {
+
         return (
             <div>
                 <EditProfile cardColor={this.props.color}
@@ -14,17 +23,7 @@ class UserProfile extends React.Component {
                     userEmail={this.props.userEmail}
                     onUpdate={this.props.onUserProfileUpdate}/>
                 <EditDoctor cardColor={this.props.color}
-                    userId={this.props.userId}
-                    doctorId={this.props.doctorId}
-                    doctorName={this.props.doctorName}
-                    doctorEmail={this.props.doctorEmail}
-                    doctorPhone={this.props.doctorPhone}
-                    doctorNr={this.props.doctorNr}
-                    doctorStreet={this.props.doctorStreet}
-                    doctorCity={this.props.doctorCity}
-                    doctorZC={this.props.doctorZC}
-                    doctorCountry={this.props.doctorCountry}
-                    onEdit={this.props.onDoctorEdit}/>
+                    userId={this.props.userId}/>
             </div>
         )
     }

@@ -89,7 +89,11 @@ class ChildInfoEdit extends React.Component {
                                     id="birthDateField"
                                     label="Birth date"
                                     renderInput={(params) => {return <TextField {...params} />}}
-                                    value={(this.props.memberToUpdate && !this.props.editEnabled ? this.props.memberToUpdate.member.birthDate : (this.props.currentChildValue && this.props.currentChildValue.birthDate ?  this.props.currentChildValue.birthDate : this.props.memberToUpdate.member.birthDate))}
+                                    value={(this.props.memberToUpdate && !this.props.editEnabled ? 
+                                                this.props.memberToUpdate.member.birthDate : 
+                                                (this.props.currentChildValue && this.props.currentChildValue.birthDate ?  
+                                                    this.props.currentChildValue.birthDate : 
+                                                    (this.props.memberToUpdate ? this.props.memberToUpdate.member.birthDate : undefined)))}
                                     onChange={this.handleBirthDateChange}
                                     disabled={!this.props.editEnabled}
                                 />

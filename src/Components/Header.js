@@ -29,7 +29,7 @@ class Header extends React.Component{
         var userLoginInitial = this.getInitialFromUserLogin(this.props.userLogin).toUpperCase();
         return (
             <div style={{height:270, marginBottom: '0%'}}>
-                <ThemeProvider theme={myTheme}>
+                
                 <Card sx={{height:'100%', marginTop:0}} style={style}>
                     <CardContent>
                         <Grid container spacing={2}>
@@ -62,8 +62,8 @@ class Header extends React.Component{
                         </Grid>
                         </Grid>                        
                     </CardContent>
-                </Card>
-                </ThemeProvider>
+                </Card>         
+                
             </div>
         );
     }

@@ -1,5 +1,8 @@
 import axios from "axios";
 
+/**
+ * User management
+ */
 export function getInitialFromUserLogin(userLogin) {
     return userLogin.charAt(0);
 }
@@ -39,6 +42,10 @@ export async function createUserAccount(login, password, email) {
     }
 }
 
+/**
+ * Doctor management
+ * 
+ */
 export async function getDoctorFromUserId(userId) {
     try {
         const doctorReq = await axios.get('http://localhost:9443/doctor/userid/'+userId);
@@ -55,3 +62,41 @@ export async function getDoctorFromUserId(userId) {
         }
     }
 }
+
+/**
+ * Activity management
+ */
+export function insertRecordIntoTimeline(activity, timeline) {
+    if (timeline.length === 0) {
+        //Edge case : timeline is empty
+        timeline.push(activity);    
+    }
+    else {
+        var i=0;
+        var isActivityInTimeline = false;
+
+        while(i<timeline.length && !isActivityInTimeline) {
+            //Till we reach the end of the timeline we check if the record occurs before the current one in the timeline
+            if(activity.activityRecord.activityTimestamp < timeline[i].activityRecord.activityTimestamp) {
+                if (i===0) {
+                    timeline.splice(0,0,activity);
+                }
+                else {
+                    timeline.splice(i-1,0,activity);
+                }
+                
+                isActivityInTimeline = true;
+            }
+
+            i++;
+        }
+
+        if (!isActivityInTimeline) {
+            timeline.push(activity);
+        }
+
+        return timeline;
+    }
+    return timeline;
+}
+

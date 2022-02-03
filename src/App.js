@@ -11,6 +11,7 @@ import MyFamily from './Components/MyFamily/MyFamily';
 import React from 'react';
 import axios from 'axios';
 import UserLogin from './Components/Login/UserLogin';
+import MyDay from './Components/MyDay/MyDay';
 
 
 const appColor = "#9c27b0";
@@ -80,6 +81,9 @@ class App extends React.Component {
       switch (this.state.activeLayout) {
         case "Dashboard":
           currentLayout = <Dashboard color={appColor} userId={this.state.user.id}/>;
+          break;
+        case "My Day":
+          currentLayout = <MyDay color={appColor} userId={this.state.user.id}/>
           break;
         case "My Family":
           currentLayout = <MyFamily color={appColor} userId={this.state.user.id}/>; 
